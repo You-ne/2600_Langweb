@@ -2,7 +2,7 @@
 
 
 
-extern int my_utf8_count_char(const char *s)
+int my_utf8_count_char(const char *s)
 {
   int   n_chars = 0;
 
