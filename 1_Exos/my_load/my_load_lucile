@@ -1,0 +1,213 @@
+#include "my_load.h"
+#include <unistd.h>
+#include <string.h> 
+#include <stdlib.h>
+
+int	my_strlen(char *str)
+{
+	int i = -1;
+	while(str[i])
+		i++;
+	return (i);
+}
+
+void	my_putstr(char *str)
+{
+	int i = -1;
+	while(str[++i])
+		write(1, &str[i], 1);
+}
+
+void	my_putnbr(int n)
+{
+	long    nb;
+
+	nb = n;
+	if (nb < 0)
+	{
+		my_putstr("-");
+		nb *= -1;
+	}
+	if (nb >= 10)
+	{
+		my_putnbr(nb / 10);
+		my_putstr((nb % 10) + "0");
+	}
+	else
+		my_putstr("0" + nb);
+}
+
+int powk(int x, unsigned int y)
+{
+    if( y == 0)
+        return 1;
+    else if (y%2 == 0)
+        return powk(x, y/2)*powk(x, y/2);
+    else
+        return x*powk(x, y/2)*powk(x, y/2);
+}
+ 
+
+void my_putdouble(double dbl, int after_point)
+{
+    int int_dbl = (int) dbl;
+	int mut_ab = powk(10,after_point);
+    int after_point_dbl = (int) (dbl * mut_ab); 
+    int mult = powk(10,(after_point-1));
+
+	my_putnbr(int_dbl);
+	my_putstr(".");
+    for (int xy=0; xy<after_point; xy++)
+    {
+        int after = (after_point_dbl/mult);
+        after = after % 10;
+		my_putnbr(after);
+        mult/=10;
+    }	
+}
+
+
+struct item *new_item(enum item_type type, union item_union *data)
+{
+	struct item *newitem;
+
+	if (!(newitem = malloc(sizeof(struct item))))
+            return (NULL);
+	newitem->type = type;
+	if (type == STAFF)
+		memcpy(&newitem->udata.staff, &data->staff, sizeof(struct item_staff));
+	if (type == STUFF)
+		memcpy(&newitem->udata.stuff, &data->stuff, sizeof(struct item_stuff));
+	return (newitem);
+}
+
+struct item_list *append_item_list(struct item_list *itemlist, struct item *leitem)
+{
+	struct item_list *list;
+
+	if (!(list = malloc(sizeof(struct item_list))))
+            return (NULL);
+	
+	list->next = itemlist;
+	list->data = new_item(leitem->type, &leitem->udata);
+	list->next = list;
+
+	return (list);
+}
+
+void print_item(struct item *leitem)
+{
+	char *buffer;
+	int date_size;
+
+	if (leitem->type==STAFF)
+	{
+		my_putstr("ITEM TYPE: STAFF\n");
+		my_putstr(leitem->udata.staff.name);
+		write(1, "\n", 1);
+		my_putstr(leitem->udata.staff.lastname);
+		write(1, "\n", 1);
+        date_size = sizeof(my_strlen("0000-00-00"));
+        buffer = malloc(date_size);
+        strftime( buffer, date_size, "%Y-%m-%d", &leitem->udata.staff.birth);
+        my_putstr("birth: ");
+        my_putstr(buffer);
+		free(buffer);
+    	my_putstr("\n");
+        strftime( buffer, date_size, "%Y-%m-%d", &leitem->udata.staff.begin_job);
+       	my_putstr("begin_job: ");
+        my_putstr(buffer);
+        my_putstr("\n");
+	}
+	else if (leitem->type==STUFF)
+	{
+		my_putstr("ITEM TYPE: STUFF\n");
+		my_putstr("id: ");
+		my_putnbr(leitem->udata.stuff.id);
+		write(1, "\n", 1);
+		my_putstr("title: ");
+		my_putstr(leitem->udata.stuff.title);
+		write(1, "\n", 1);
+		my_putstr("desc: ");
+		my_putstr(leitem->udata.stuff.desc);
+		write(1, "\n", 1);
+		my_putstr("height: ");
+		my_putnbr(leitem->udata.stuff.height);
+		write(1, "\n", 1);
+		my_putstr("width: ");
+		my_putnbr(leitem->udata.stuff.width);
+		write(1, "\n", 1);
+        my_putstr("depth: ");
+        my_putdouble(leitem->udata.stuff.depth, 2);
+		write(1, "\n", 1);
+        my_putstr("weight: ");
+        my_putdouble(leitem->udata.stuff.weight, 2);
+        write(1, "\n", 1);
+	}	
+}
+
+void save_item_list(int fd, struct item_list *maliste)
+{ 
+	char buffMa[20] = "Itemlist V1.0";
+    int i=0;
+ 
+    write(fd, &buffMa, 20);
+    while (maliste->next != NULL){
+        maliste = maliste->next;
+        i++;
+    }
+    write(fd,&i,sizeof(int));
+    while (maliste->next != NULL)
+    {
+       write(fd,&maliste->data->type,sizeof(enum item_type));
+       if (maliste->data->type == 0){
+           write(fd,&maliste->data->udata.staff,sizeof(struct item_staff));
+       }else if (maliste->data->type == 1){
+           write(fd,&maliste->data->udata.stuff,sizeof(struct item_stuff));
+       }
+    }
+}
+
+
+/*
+*	The file contain 20 bytes for file info and 4 bytes for sizw total and is a int
+*   boucle until bufferInt
+*   we have the number of staffstuff; int = 4bytes
+*   and we check the num
+*   and we read
+*/
+
+struct item_list *load_item_list(int fd)
+{	
+    int i = -1;
+    int    stuffstaff;
+	int     buffermagic[20];
+	int     bufferint;
+    struct  item_list *list;
+    union   item_union *boom = malloc(sizeof(union item_union));
+    
+	if (!(list = malloc(sizeof(struct item_list))))
+        return (NULL);
+	if (fd < 0)
+		return (NULL);
+	read(fd, &buffermagic, 20);
+	read(fd, &bufferint, sizeof(int));
+	while (++i < bufferint)
+	{
+        read(fd, &stuffstaff, sizeof(int));
+        if (stuffstaff == 0)
+        {
+            read(fd, &boom->staff, sizeof(struct item_staff));
+            list->data = new_item(STAFF, boom);
+            append_item_list(list, new_item(STAFF, boom));
+        }
+        else if(stuffstaff == 1)
+        {
+            read(fd, &boom->stuff, sizeof(struct item_stuff));
+            list->data = new_item(STUFF, boom);
+            append_item_list(list, new_item(STUFF, boom));
+        }
+	}
+	return (list);
+}
+

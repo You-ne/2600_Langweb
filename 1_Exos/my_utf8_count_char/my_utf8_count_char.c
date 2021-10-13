@@ -1,5 +1,4 @@
 /*#include<stdio.h>*/
-  
 #include "./my_utf8_count_char.h"
 
 
@@ -8,8 +7,8 @@ int my_utf8_count_char(const char *s)
   int   n_chars = 0;
 
   while(*s)
-    n_chars += ((*s++ & 0xc0) != 0x80); #everything that does not start as 10
-  return(n_chars);                      #is a valid utf-8 char to count
+    n_chars += ((*s++ & 0xc0) != 0x80); //everything that does not start as 10
+  return(n_chars);                      //is a valid utf-8 char to count
 }
 
 
