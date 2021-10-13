@@ -1,5 +1,6 @@
 /*#include<stdio.h>*/
-
+  
+#include "./my_utf8_count_char.h"
 
 
 int my_utf8_count_char(const char *s)
