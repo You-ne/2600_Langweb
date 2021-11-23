@@ -1,80 +1,210 @@
-import abc, math as m
+from abc import ABC, abstractmethod
+import math as m
 
-#def     dist(x1 :float, y1 :float, x2 :float, y2 :float) -> float:
-#    return (m.sqrt(((x2-x1)**2)+((y2-y1)**2)))
+def     dist(x1 :float, y1 :float, x2 :float, y2 :float) -> float:
+    return (m.sqrt(((x2-x1)**2)+((y2-y1)**2)))
 
-''''''''''
-CLASSE DE DEPLACEMENT & TYPES DE LOCOMOTION
-''''''''''
+
+
+'''
+CLASSE ABSTRAITE DEPLACEMENT & TYPES DE DEPLACEMENT
+'''
 #####################################################################
 class   Deplacement(ABC):
-    @classmethod
+    def __init__(self, x = 0.0, y = 0.0, z = 0.0, zone = ""):
+        self._x = x
+        self._y = y
+        self._z = z
+        self._zone = zone
+    
+    @property
+    @abstractmethod
+    def x(self):
+        return self._x
+
+    @property
+    @abstractmethod
+    def y(self):
+        return self._y
+    
+    @property
+    @abstractmethod
+    def z(self):
+        return self._z
+    
+    @property
+    @abstractmethod
+    def zone(self):
+        return self._zone
+
     @abstractmethod
     def move_to(self, x :float, y :float, z :float, zone :str):
-        self.dist= (m.sqrt(((x2-x1)**2)+((y2-y1)**2)))
+        pass
 #####################################################################
 ##############
 
 class   Volant(Deplacement):
-    def move_to(self, x :float, y :float, z :float, zone :str):
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
         try:
-            assert (z > 0)
+            assert (z > 0.0)
         except:
-            print("Flying underground!\n")
+            raise(ValueError("Flying underground!\n"))
         return (f"se déplace vers {x}, {y}, {z} en volant")
 ##############
 
 class   Courant(Deplacement):
-    def move_to(self, x :float, y :float, z :float, zone :str):
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
         try:
-            assert (z == 0 and zone == 'terre')
+            assert (z == 0.0 and zone == 'terre')
         except:
-            print("Running in the sky!\n")
+            raise(ValueError("Running in the sky!\n"))
         return (f"se déplace vers {x}, {y} en courant")
 ##############
 
 class   Marchant(Deplacement):
-    def move_to(self, x :float, y :float, z :float, zone :str):
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
         try:
-            assert (z == 0 and zone == 'terre')
+            assert (z == 0.0 and zone == 'terre')
         except:
-            print("Walking in the sky!\n")
+            raise(ValueError("Walking in the sky!\n"))
         return (f"se déplace vers {x}, {y} en marchant")
 ##############
 
 class   Roulant(Deplacement):
-    def move_to(self, x :float, y :float, z :float, zone :str):
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
         try:
-            assert (z == 0 and zone == 'terre')
+            assert (z == 0.0 and zone == 'terre')
         except:
-            print("Rolling in the sky!\n")
+            raise(ValueError("Rolling in the sky!\n"))
         return (f"se déplace vers {x}, {y} en roulant")
 ##############
 
 class   Flottant(Deplacement):
-    def move_to(self, x :float, y :float, z :float, zone :str):
+
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
         try:
-            assert (z == 0 and zone == 'mer')
+            assert (z == 0.0 and zone == 'mer')
         except:
-            print("Flotte dans la boue!\n")
+            raise(ValueError("Flotte dans la boue!\n"))
         return (f"se déplace vers {x}, {y} en flottant")
 ##############
 
 class   Nageant(Deplacement):
-    def move_to(self, x :float, y :float, z :float, zone :str):
+    
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
         try:
-            assert (z < 0 and zone == 'mer')
+            assert (z < 0.0 and zone == 'mer')
         except:
-            print("Swimming againt gravity!\n")
+            raise(ValueError("Swimming againt gravity!\n"))
         return (f"se déplace vers {x}, {y}, {z} en nageant")
 ##############
 
 
 
 
-''''''''''
+'''
 CLASSES D'ANIMAUX
-''''''''''
+'''
 #####################################################################
 class   Animal:                                
                                                
@@ -84,76 +214,175 @@ class   Animal:
 #####################################################################
 ##############
 
-class Humain(Animal, Marchant, Courant, Nageant):
+class Humain(Animal, Marchant, Courant, Nageant, Flottant):
     
     def __init__(self):
         Animal.__init__(self, 2, False)
     
-    def move_to(self, x :float, y :float, z :float, zone :str):
-        mov = None
-        Deplacement.move_to(x, y, z, zone)
-        print('L\'humain ')
-        if (mov= Nageant.move_to(self, x, y, z, zone) or
-            (2.0 < Dist < 10.0 and mov= Courant.move_to(self, x, y, z, zone)) or
-            mov = Marchant.move_to(self, x, y, z))
-            print(mov, x, y, z)
-        else
-            print(' ne peut pas aller dans cette direction ou cette zone')
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
+        distance = dist(0, 0, x, y)
+        if (distance >= 2.0 and distance <= 10.0 and zone == "terre"):
+            try:
+                return Courant.move_to(self,x,y,z,zone)
+            except:
+                pass
+        elif (distance < 2.0 or distance > 10.0 and zone == "terre"):
+            try:
+                return Marchant.move_to(self,x,y,z,zone)
+            except:
+                pass
+        else:    
+            try:
+                return Flottant.move_to(self,x,y,z,zone)
+            except:
+                pass
+            try:
+                return Nageant.move_to(self,x,y,z,zone)
+            except:
+                raise ValueError()
+
+
 
 ##############
 
-class Cygne(Animal, Volant, Flottant):
+class Cygne(Animal, Volant, Flottant, Nageant):
     
     def __init__(self):
-        Animal.__init__(self, 2, False)
+        Animal.__init__(self, 2, True)
     
-    def move_to(self, x :float, y :float, z :float, zone :str):
-        mov = None
-        Deplacement.move_to(x, y, z, zone)
-        print('Le cygne ')
-        if (mov= Volant.move_to(self, x, y, z, zone) or
-            mov= Flottant.move_to(self, x, y, z, zone))
-            print(mov, x, y, z)
-        else(' ne peut pas aller dans cette direction ou cette zone')
-##############
+    @property
+    def x(self):
+        return self._x
 
-class Canard(Animal, Volant, Flottant, Marchant, Courant):
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone = None):
+        try:
+            return Flottant.move_to(self,x,y,z,zone)
+        except:
+            pass
+        try:
+            return Volant.move_to(self,x,y,z,zone)
+        except:
+            pass
+        try:
+            return Nageant.move_to(self,x,y,z,zone)
+        except:
+            raise ValueError()
+
+class Canard(Animal, Volant, Flottant, Nageant, Marchant, Courant):
     
     def __init__(self):
-        Animal.__init__(self, 2, False)
+        Animal.__init__(self, 2, True)
     
-    def move_to(self, x :float, y :float, z :float, zone :str):
-        mov = None
-        Deplacement.move_to(x, y, z, zone)
-        print('Le canard ')
-        if (mov= Volant.move_to(self, x, y, z, zone) or
-            mov= Flottant.move_to(self, x, y, z, zone) or
-            (2.0 < Dist < 10.0 and mov= Courant.move_to(self, x, y, z, zone)) or
-            mov = Marchant.move_to(self, x, y, z))
-            print(mov, x, y, z)
-        else(' ne peut pas aller dans cette direction ou cette zone')
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
+        distance = dist(0, 0, x, y)
+        if (z > 0):
+            try:
+                return Volant.move_to(self,x,y,z,zone)
+            except:
+                pass
+        if (zone == "terre"):
+            if (distance >= 2.0 and distance <= 10.0):
+                try:
+                    return Courant.move_to(self,x,y,z,zone)
+                except:
+                    pass
+            else:
+                try:
+                    return Marchant.move_to(self,x,y,z,zone)
+                except:
+                    pass       
+        else: 
+            if(z == 0): 
+                try:
+                    return Flottant.move_to(self,x,y,z,zone)
+                except:
+                    pass
+            else:
+                try:
+                    return Nageant.move_to(self,x,y,z,zone)
+                except:
+                    raise ValueError()
+        
+
 ##############
 
-class Poisson(Animal, Nageant, Flottant):
+class Poisson(Animal, Nageant):
     
     def __init__(self):
         Animal.__init__(self, 0, True)
     
-    def move_to(self, x :float, y :float, z :float, zone :str):
-        mov = None
-        Deplacement.move_to(x, y, z, zone)
-        print('Le poisson ')
-        if (mov= Nageant.move_to(self, x, y, z, zone) or
-            mov= Flottant.move_to(self, x, y, z, zone))
-            print(mov, x, y, z)
-        else(' ne peut pas aller dans cette direction ou cette zone')
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
+        try:
+            return Nageant.move_to(self,x,y,z,zone)
+        except:
+            raise ValueError()
 
 
 
 
-''''''''''
+'''
 CLASSES DE VEHICULE
-''''''''''
+'''
 #####################################################################
 class   Vehicule:
     
@@ -165,68 +394,141 @@ class   Vehicule:
 class VoitureSansPermis(Vehicule, Roulant):
     
     def __init__(self):
-        Vehicule.__init__(self, 3)
+        Vehicule.__init__(self)
     
-    def move_to(self, x :float, y :float, z :float, zone :str):
-        mov = None
-        Deplacement.move_to(x, y, z, zone)
-        print('La voiture sans permis ')
-        if (mov= Roulant.move_to(self, x, y, z, zone))
-            print(mov, x, y, z)
-        else('ne peut pas aller dans cette direction ou cette zone')
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
+        try:
+            return Roulant.move_to(x, y, z, zone)
+        except:
+            raise ValueError()
+
 ##############
 
 class Berline(Vehicule, Roulant):
     
     def __init__(self):
-        Vehicule.__init__(self, 3)
+        Vehicule.__init__(self, 5)
     
-    def move_to(self, x :float, y :float, z :float, zone :str):
-        mov = None
-        Deplacement.move_to(x, y, z, zone)
-        print('La berline ')
-        if (mov= Roulant.move_to(self, x, y, z, zone)
-            print(mov, x, y, z)
-        else('ne peut pas aller dans cette direction ou cette zone')
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
+        try:
+            return Roulant.move_to(x, y, z, zone)
+        except:
+            raise ValueError()
+
 ##############
 
 class Moto(Vehicule, Roulant):
     
     def __init__(self):
-        Vehicule.__init__(self, 3)
+        Vehicule.__init__(self, 0)
     
-    def move_to(self, x :float, y :float, z :float, zone :str):
-        mov = None
-        Deplacement.move_to(x, y, z, zone)
-        print('La moto ')
-        if (mov= Roulant.move_to(self, x, y, z, zone)
-            print(mov, x, y, z)
-        else('ne peut pas aller dans cette direction ou cette zone')
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
+        try:
+            return Roulant.move_to(x, y, z, zone)
+        except:
+            raise ValueError()
 ##############
 
 class Hors_Bord(Vehicule, Flottant):
     
     def __init__(self):
-        Vehicule.__init__(self, 3)
+        Vehicule.__init__(self)
     
-    def move_to(self, x :float, y :float, z :float, zone :str):
-        mov = None
-        Deplacement.move_to(x, y, z, zone)
-        print('Le hors-bord ')
-        if (mov= Roulant.move_to(self, x, y, z, zone)
-            print(mov, x, y, z)
-        else('ne peut pas aller dans cette direction ou cette zone')
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
+        try:
+            return Flottant.move_to(x, y, z, zone)
+        except:
+            raise ValueError()
+
 ##############
 
-class Spitfire(Vehicule, Volant)
+class Spitfire(Vehicule, Volant):
     
     def __init__(self):
-        Vehicule.__init__(self, 3):
+        Vehicule.__init__(self)
     
-    def move_to(self, x :float, y :float, z :float, zone :str):
-        mov = None
-        Deplacement.move_to(x, y, z, zone)
-        print('Le Spitfire ')
-        if (mov= Roulant.move_to(self, x, y, z, zone)
-            print(mov, x, y, z)
-        else('ne peut pas aller dans cette direction ou cette zone')
+    @property
+    def x(self):
+        return self._x
+
+    @property
+    def y(self):
+        return self._y
+    
+    @property
+    def z(self):
+        return self._z
+    
+    @property
+    def zone(self):
+        return self._zone
+
+    def move_to(self, x, y, z, zone):
+        try:
+            return Volant.move_to(x, y, z, zone)
+        except:
+            raise ValueError()

@@ -17,3 +17,4 @@ assert test[1] == 2
 assert test[2] == 3
 assert test[3] == 4
 assert test.desc == "non vraiment"
+print('Len = ' + str(len(test)))
